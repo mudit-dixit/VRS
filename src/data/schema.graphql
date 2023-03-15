@@ -1,0 +1,141 @@
+enum SourceType {
+    SOURCE_1
+    SOURCE_2
+    SOURCE_3
+    SOURCE_4
+}
+
+enum Gender {
+    FEMALE
+    MALE
+}
+
+# ... EnumTypeSeperator
+
+type User @secret(field:"password"){
+	userName: String! @search(by:[exact]) @dgraph(pred:"userName") @id
+	name: String @search(by:[term]) @dgraph(pred:"name")
+	role: String @search(by:[exact]) @dgraph(pred:"role")
+	resetPasswordCode: String @search(by:[exact]) @dgraph(pred:"resetPasswordCode")
+}
+
+type Source {
+    id: ID!,
+    sourceType: SourceType! @dgraph(pred:"sourceType"),
+    selectedDevice: Device! @dgraph(pred:"selectedDevice"),
+}
+
+type Device {
+    id: ID!,
+    name: String! @search(by:[term]) @dgraph(pred:"name"),
+    url: String! @search(by:[term]) @dgraph(pred:"url"),
+}
+
+type Camp {
+	id: ID!
+	name: String! @search(by:[term]) @dgraph(pred:"name")
+	campType: CampType! @dgraph(pred:"campType")
+	locations: [CampLocation] @dgraph(pred:"locations")
+	fromDate: DateTime @dgraph(pred:"fromDate")
+	toDate: DateTime @dgraph(pred:"toDate")
+	fromTime: String @dgraph(pred:"fromTime")
+	toTime: String @dgraph(pred:"toTime")
+    doctors: [Doctor] @dgraph(pred:"doctors")
+    status: CampStatus @dgraph(pred:"status")
+    createdOn: DateTime @dgraph(pred:"createdOn")
+    updatedOn: DateTime @dgraph(pred:"updatedOn")
+}
+
+type CampActivity {
+	id: ID!
+	camp: Camp! @dgraph(pred:"camp")
+	campLocation: CampLocation! @dgraph(pred:"campLocation")
+	startDate: DateTime! @dgraph(pred:"startDate")
+	startTime: String! @dgraph(pred:"startTime")
+	doctorInCharge: Doctor! @dgraph(pred:"doctorInCharge")
+	image: CampImage @dgraph(pred:"image")
+    patientCount: CampPatientCount! @dgraph(pred:"patientCount")
+    createdOn: DateTime @dgraph(pred:"createdOn")
+    updatedOn: DateTime @dgraph(pred:"updatedOn")
+}
+
+type CampImage {
+    id: ID!
+    sourceID: String! @search(by:[exact]) @dgraph(pred:"sourceID")
+    createdOn: DateTime @dgraph(pred:"createdOn")
+    updatedOn: DateTime @dgraph(pred:"updatedOn")
+}
+
+type CampLocation {
+    id: ID!
+    name: String! @search(by:[term]) @dgraph(pred:"name")
+    createdOn: DateTime @dgraph(pred:"createdOn")
+    updatedOn: DateTime @dgraph(pred:"updatedOn")
+}
+
+type Doctor {
+    id: ID!
+    name: String! @search(by:[term]) @dgraph(pred:"name")
+    profession: String! @search(by:[exact]) @dgraph(pred:"profession")
+    speciality: String! @search(by:[exact]) @dgraph(pred:"speciality")
+    email: String! @dgraph(pred:"email")
+    mobileNo: String! @dgraph(pred:"mobileNo")
+    createdOn: DateTime @dgraph(pred:"createdOn")
+    updatedOn: DateTime @dgraph(pred:"updatedOn")
+}
+
+type Patient {
+    id: ID!
+    name: String! @search(by:[term]) @dgraph(pred:"name")
+    age: Int! @dgraph(pred:"age")
+    gender: Gender! @dgraph(pred:"gender")
+    height: Int! @dgraph(pred:"height")
+    weight: Int! @dgraph(pred:"weight")
+    readings: [DeviceReading] @dgraph(pred:"readings")
+    camp: Camp! @dgraph(pred:"camp")
+    createdOn: DateTime @dgraph(pred:"createdOn")
+    updatedOn: DateTime @dgraph(pred:"updatedOn")
+}
+
+type Device {
+    id: ID!
+    deviceType: DeviceType! @search(by:[exact]) @dgraph(pred:"deviceType")
+    name: String! @search(by:[term]) @dgraph(pred:"name")
+    macAddress: String! @search(by:[exact]) @dgraph(pred:"macAddress")
+    brand: String @dgraph(pred:"brand")
+    camp: Camp! @dgraph(pred:"camp")
+    deviceSetting: DeviceSetting @dgraph(pred:"deviceSetting")
+    createdOn: DateTime @dgraph(pred:"createdOn")
+    updatedOn: DateTime @dgraph(pred:"updatedOn")
+}
+
+type DeviceSetting {
+    id: ID!
+    samplingRate: Float @dgraph(pred:"samplingRate")
+    alarmSetting: [MeasurementAlarmSetting] @dgraph(pred:"alarmSetting")
+    autoStopSetting: AutoStopSetting @dgraph(pred:"autoStopSetting")
+    measurementReminder: Boolean @dgraph(pred:"measurementReminder")
+    vibrate: Boolean @dgraph(pred:"vibrate")
+    createdOn: DateTime @dgraph(pred:"createdOn")
+    updatedOn: DateTime @dgraph(pred:"updatedOn")
+}
+
+type MeasurementAlarmSetting {
+    id: ID!
+    name: String! @search(by:[term]) @dgraph(pred:"name")
+    lowerLimit: Float! @dgraph(pred:"lowerLimit")
+    upperLimit: Float! @dgraph(pred:"upperLimit")
+    createdOn: DateTime @dgraph(pred:"createdOn")
+    updatedOn: DateTime @dgraph(pred:"updatedOn")
+}
+
+type DeviceReading {
+    id: ID!
+    deviceType: DeviceType! @search(by:[exact]) @dgraph(pred:"deviceType")
+    deviceName: String! @search(by:[term]) @dgraph(pred:"deviceName")
+    measurementName: String! @dgraph(pred:"measurementName")
+    measurementValue: String! @dgraph(pred:"measurementValue")
+    measurementUnit: String! @dgraph(pred:"measurementUnit")
+    createdOn: DateTime @dgraph(pred:"createdOn")
+    updatedOn: DateTime @dgraph(pred:"updatedOn")
+}
